@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace FillingDemo
 {
@@ -11,11 +6,11 @@ namespace FillingDemo
     {
         public PathPoint(Point point, byte type)
         {
-            m_point = point;
-            m_type = type;
+            Point = point;
+            Type = type;
         }
 
-        public Point m_point { get; set; }
-        public byte m_type { get; set; }
+        public Point Point { get; set; }
+        public byte Type { get; set; }
     }
 }

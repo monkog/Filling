@@ -2,9 +2,9 @@
 {
     class PolygonTag
     {
-        public int m_maxX { get; set; }
-        public int m_maxY { get; set; }
-        public int m_minX { get; set; }
-        public int m_minY { get; set; }
+        public int MaxX { get; set; }
+        public int MaxY { get; set; }
+        public int MinX { get; set; }
+        public int MinY { get; set; }
     }
 }

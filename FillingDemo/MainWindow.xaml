@@ -14,19 +14,19 @@
                 </Border.Background>
                 <DockPanel LastChildFill="False">
                     <TextBlock Text="Font size:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center" Margin="20,20,10,20"/>
-                    <TextBox Name="m_sizeTextBox" Text="200" Height="50" Width="100" TextAlignment="Center" TextWrapping="NoWrap" VerticalContentAlignment="Center" FontSize="20" FontWeight="Medium" BorderBrush="Gray" BorderThickness="1" LostFocus="m_sizeTextBox_LostFocus"/>
+                    <TextBox Name="SizeTextBox" Text="200" Height="50" Width="100" TextAlignment="Center" TextWrapping="NoWrap" VerticalContentAlignment="Center" FontSize="20" FontWeight="Medium" BorderBrush="Gray" BorderThickness="1" LostFocus="SizeTextBox_LostFocus"/>
                     <TextBlock Text="Font color:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center" Margin="40,20,10,20"/>
                     <Border BorderThickness="2" BorderBrush="Black" Width="56" Height="56" Margin="5,5,5,5">
-                        <Canvas Name="m_colorCanvas" Width="50" Height="50" Background="MidnightBlue" MouseDown="m_colorCanvas_MouseDown"/>
+                        <Canvas Name="ColorCanvas" Width="50" Height="50" Background="MidnightBlue" MouseDown="ColorCanvas_MouseDown"/>
                     </Border>
                     <TextBlock Text="Your text:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center" Margin="300,20,10,20"/>
-                    <TextBox Name="m_inputTextBox" Width="400" Height="50" Margin="5,5,5,5" FontSize="20" VerticalContentAlignment="Center" Foreground="{Binding ElementName=m_colorCanvas, Path=Background}" TextWrapping="Wrap" FontWeight="ExtraBold" BorderBrush="Gray" BorderThickness="1" FontFamily="Global Serif"/>
-                    <Button Name="m_setTextButton" Width="150" Height="50" Margin="20,5,5,5" BorderBrush="Black" BorderThickness="2" Click="m_setTextButton_Click">
+                    <TextBox Name="InputTextBox" Width="400" Height="50" Margin="5,5,5,5" FontSize="20" VerticalContentAlignment="Center" Foreground="{Binding ElementName=ColorCanvas, Path=Background}" TextWrapping="Wrap" FontWeight="ExtraBold" BorderBrush="Gray" BorderThickness="1" FontFamily="Global Serif"/>
+                    <Button Name="SetTextButton" Width="150" Height="50" Margin="20,5,5,5" BorderBrush="Black" BorderThickness="2" Click="SetTextButton_Click">
                         <TextBlock Text="Choose your text" FontSize="16" FontWeight="Heavy"/>
                     </Button>
                 </DockPanel>
             </Border>
         </DockPanel>
-        <Canvas Name="m_drawingCanvas" Margin="0,72,0,0" />
+        <Canvas Name="DrawingCanvas" Margin="0,72,0,0" />
     </Grid>
 </Window>
