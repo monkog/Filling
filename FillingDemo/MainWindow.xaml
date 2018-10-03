@@ -3,30 +3,59 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Filling demo" Height="350" Width="1371.449" WindowState="Maximized" Background="WhiteSmoke" Loaded="Window_Loaded_1">
-    <Grid>
-        <DockPanel Name="m_upperPanel" Height="72" VerticalAlignment="Top" Grid.ColumnSpan="3" >
-            <Border BorderBrush="Black" BorderThickness="2,1,2,5" CornerRadius="3,3,3,3">
-                <Border.Background>
-                    <LinearGradientBrush EndPoint="0.504,1.5" StartPoint="0.504,0.03">
-                        <GradientStop Color="Silver" Offset="0.567"/>
-                        <GradientStop Color="AliceBlue" Offset="0"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-                <DockPanel LastChildFill="False">
-                    <TextBlock Text="Font size:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center" Margin="20,20,10,20"/>
-                    <TextBox Name="SizeTextBox" Text="200" Height="50" Width="100" TextAlignment="Center" TextWrapping="NoWrap" VerticalContentAlignment="Center" FontSize="20" FontWeight="Medium" BorderBrush="Gray" BorderThickness="1" LostFocus="SizeTextBox_LostFocus"/>
-                    <TextBlock Text="Font color:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center" Margin="40,20,10,20"/>
-                    <Border BorderThickness="2" BorderBrush="Black" Width="56" Height="56" Margin="5,5,5,5">
-                        <Canvas Name="ColorCanvas" Width="50" Height="50" Background="MidnightBlue" MouseDown="ColorCanvas_MouseDown"/>
-                    </Border>
-                    <TextBlock Text="Your text:" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center" Margin="300,20,10,20"/>
-                    <TextBox Name="InputTextBox" Width="400" Height="50" Margin="5,5,5,5" FontSize="20" VerticalContentAlignment="Center" Foreground="{Binding ElementName=ColorCanvas, Path=Background}" TextWrapping="Wrap" FontWeight="ExtraBold" BorderBrush="Gray" BorderThickness="1" FontFamily="Global Serif"/>
-                    <Button Name="SetTextButton" Width="150" Height="50" Margin="20,5,5,5" BorderBrush="Black" BorderThickness="2" Click="SetTextButton_Click">
-                        <TextBlock Text="Choose your text" FontSize="16" FontWeight="Heavy"/>
-                    </Button>
-                </DockPanel>
-            </Border>
-        </DockPanel>
-        <Canvas Name="DrawingCanvas" Margin="0,72,0,0" />
-    </Grid>
+	<Window.Resources>
+		<Style TargetType="TextBlock">
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="FontWeight" Value="DemiBold"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Margin" Value="5"/>
+		</Style>
+		<Style TargetType="TextBox">
+			<Setter Property="Height" Value="50"/>
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="BorderBrush" Value="Gray"/>
+			<Setter Property="BorderThickness" Value="1"/>
+		</Style>
+	</Window.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="72"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Border Grid.Row="0" BorderBrush="Black" BorderThickness="2,1,2,5" CornerRadius="3">
+			<Border.Background>
+				<LinearGradientBrush EndPoint="0.504,1.5" StartPoint="0.504,0.03">
+					<GradientStop Color="Silver" Offset="0.567"/>
+					<GradientStop Color="AliceBlue" Offset="0"/>
+				</LinearGradientBrush>
+			</Border.Background>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Column="0" Text="Font size:"/>
+				<TextBox Grid.Column="1" Name="SizeTextBox" Text="200" Width="100" FontWeight="Medium" LostFocus="SizeTextBox_LostFocus"/>
+				<TextBlock Grid.Column="2" Text="Font color:"/>
+				<Border Grid.Column="3" BorderThickness="2" BorderBrush="Black" Width="56" Height="56" Margin="5">
+					<Canvas Name="ColorCanvas" Width="50" Height="50" Background="MidnightBlue" MouseDown="ColorCanvas_MouseDown"/>
+				</Border>
+				<TextBlock Grid.Column="5" Text="Your text:"/>
+				<TextBox Grid.Column="6" Name="InputTextBox" Width="400" Foreground="{Binding ElementName=ColorCanvas, Path=Background}" TextWrapping="Wrap" FontWeight="ExtraBold" FontFamily="Global Serif"/>
+				<Button Grid.Column="7" Name="SetTextButton" Width="150" Height="50" Margin="20,5,5,5" BorderBrush="Black" BorderThickness="2" Click="SetTextButton_Click">
+					<TextBlock Text="Choose your text" FontWeight="Heavy"/>
+				</Button>
+			</Grid>
+		</Border>
+		<Canvas Grid.Row="1" Name="DrawingCanvas"/>
+	</Grid>
 </Window>
