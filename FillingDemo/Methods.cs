@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Threading;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 using FillingDemo.Helpers;
 using Point = System.Windows.Point;
 using Polygon = FillingDemo.Shapes.Polygon;
-using Shape = FillingDemo.Shapes.Shape;
 
 namespace FillingDemo
 {
@@ -23,9 +16,6 @@ namespace FillingDemo
 
         private void InitializePolygons()
         {
-            _polygonGraphics = new List<GraphicsPath>();
-            _visiblePolygonGraphics = new List<GraphicsPath>();
-
 			var polygon1 = new[]
 			{
 				new Point(100, 100),
@@ -90,8 +80,6 @@ namespace FillingDemo
 				new Polygon(polygon5),
 				new Polygon(polygon6)
 	        };
-
-	        _polygonGraphics = _polygons.Select(p => p.GraphicsPath).ToList();
 		}
 
 		private void FillPolygons()
@@ -99,7 +87,7 @@ namespace FillingDemo
 			int polygonCount = _random.Next(3, 6);
 			_background = new Bitmap((int)DrawingCanvas.ActualWidth, (int)DrawingCanvas.ActualHeight);
 
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < polygonCount; i++)
 			{
 				var polygon = _polygons.ElementAt(i);
 
@@ -110,81 +98,12 @@ namespace FillingDemo
 				catch (Exception)
 				{
 					Bitmap bitmap = new Bitmap(1, 1);
-					bitmap.SetPixel(0, 0, System.Drawing.Color.FromArgb(255, _random.Next(255), _random.Next(255), _random.Next(255)));
+					bitmap.SetPixel(0, 0, Color.FromArgb(255, _random.Next(255), _random.Next(255), _random.Next(255)));
 					polygon.EdgesSortFill(bitmap, _background, 180);
 				}
-
-				_visiblePolygonGraphics.Add(polygon.GraphicsPath);
 			}
 			DrawingCanvas.Background = _background.CreateImageBrush();
 		}
-
-		/// <summary>
-		/// Second way to create path from text.
-		/// Actually the function is never called. 
-		/// I put it here jus to keep in mind that there is another way to convert text to graphics.
-		/// </summary>
-		private void ConvertTextToSmootherGraphics()
-        {
-            FormattedText text = new FormattedText(InputTextBox.Text, Thread.CurrentThread.CurrentUICulture,
-                FlowDirection.LeftToRight,
-                new Typeface(InputTextBox.FontFamily, InputTextBox.FontStyle, InputTextBox.FontWeight,
-                    InputTextBox.FontStretch),
-                double.Parse(SizeTextBox.Text), ColorCanvas.Background);
-
-            Geometry textGeometry = text.BuildGeometry(new Point(0, 0));
-
-            Path path = new Path();
-            path.Fill = ColorCanvas.Background;
-            path.Data = textGeometry;
-            Canvas.SetZIndex(_textCanvas, int.MaxValue);
-            DrawingCanvas.Children.Add(path);
-
-            PathGeometry m_pathGeometry = textGeometry.GetOutlinedPathGeometry();
-        }
-
-        private void ConvertTextToGraphics()
-        {
-            System.Drawing.FontFamily fontFamily = System.Drawing.FontFamily.GenericSerif;
-            int fontStyle = (int)System.Drawing.FontStyle.Bold;
-
-            GraphicsPath graphicsPath = new GraphicsPath();
-            graphicsPath.AddString(InputTextBox.Text, fontFamily, fontStyle, _textSize
-                , new System.Drawing.Point(0, 0), StringFormat.GenericDefault);
-            graphicsPath.Flatten();
-            PointF[] floatPoints = graphicsPath.PathPoints;
-            var pointTypes = graphicsPath.PathTypes;
-
-            RectangleF boundRect = graphicsPath.GetBounds();
-
-            _textCanvas = new Canvas();
-            _textCanvas.Width = (int)(boundRect.Size.Width + boundRect.X + 1);
-            _textCanvas.Height = (int)(boundRect.Size.Height + boundRect.Y + 1);
-            Bitmap bitmap = new Bitmap((int)(boundRect.Size.Width + boundRect.X + 1),
-                (int)(boundRect.Size.Height + boundRect.Y + 1));
-            var points = floatPoints.Select(p => p.ToWindowsPoint());
-
-            Random random = new Random(DateTime.Now.Millisecond);
-
-            Bitmap colourBitmap = new Bitmap(1, 1);
-            colourBitmap.SetPixel(0, 0, System.Drawing.Color.FromArgb(255, _color.R
-                , _color.G, _color.B));
-            try
-            {
-	            Shape.EdgesSortFill(colourBitmap, bitmap, points, pointTypes, 255);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("The text you provided is too long or the font is to big.");
-                _textCanvas = new Canvas();
-                return;
-            }
-
-            _textGraphicsPath = graphicsPath;
-            _textCanvas.Background = bitmap.CreateImageBrush();
-            DrawingCanvas.Children.Add(_textCanvas);
-            _textCanvas.MouseDown += TextCanvas_MouseDown;
-        }
 
         public Point DoLinesIntersect(PointInfo lineA, PointInfo lineB)
         {

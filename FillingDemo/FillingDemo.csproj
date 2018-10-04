@@ -59,6 +59,7 @@
     <Compile Include="Shapes\ActiveEdge.cs" />
     <Compile Include="Shapes\Polygon.cs" />
     <Compile Include="Shapes\Shape.cs" />
+    <Compile Include="Shapes\Text.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
+using FillingDemo.Helpers;
+using FillingDemo.Shapes;
 using ButtonBase = System.Windows.Controls.Primitives.ButtonBase;
 using Point = System.Windows.Point;
 
@@ -14,12 +15,8 @@ namespace FillingDemo
 	public partial class MainWindow
 	{
 		#region globals
-		private List<GraphicsPath> _polygonGraphics;
-		private List<GraphicsPath> _visiblePolygonGraphics;
 		private List<Bitmap> _bitmaps;
 		private Canvas _textCanvas;
-		private GraphicsPath _textGraphicsPath;
-		private GraphicsPath _currentTextGraphicsPath;
 		private Point _lastMousePosition;
 		private bool _isMouseDown;
 		private Bitmap _background;
@@ -104,6 +101,28 @@ namespace FillingDemo
 			_color = colorDialog.Color;
 			DrawingCanvas.Children.Remove(_textCanvas);
 			ConvertTextToGraphics();
+		}
+
+		private void ConvertTextToGraphics()
+		{
+			var text = new Text(InputTextBox.Text, float.Parse(SizeTextBox.Text));
+
+			try
+			{
+				var resultBitmap = text.Draw(_color);
+				_textCanvas = new Canvas { Width = resultBitmap.Width, Height = resultBitmap.Height };
+
+				_textCanvas.Background = resultBitmap.CreateImageBrush();
+			}
+			catch (Exception)
+			{
+				System.Windows.MessageBox.Show("The text you provided is too long or the font is to big.");
+				_textCanvas = new Canvas();
+				return;
+			}
+
+			DrawingCanvas.Children.Add(_textCanvas);
+			_textCanvas.MouseDown += TextCanvas_MouseDown;
 		}
 
 		private void SetTextButton_Click(object sender, RoutedEventArgs e)
