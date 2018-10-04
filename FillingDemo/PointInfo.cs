@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 
 namespace FillingDemo
 {
-    public class PointInfo
+	[DebuggerDisplay("Start = {StartPoint.X}, {StartPoint.Y} End = {EndPoint.X}, {EndPoint.Y}, Delta = {Delta}")]
+	public class PointInfo
     {
         public Point StartPoint { get; set; }
         public Point EndPoint { get; set; }

@@ -54,6 +54,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\GraphicsPathExtensions.cs" />
+    <Compile Include="Helpers\PointExtensions.cs" />
+    <Compile Include="Shapes\ActiveEdge.cs" />
+    <Compile Include="Shapes\Polygon.cs" />
+    <Compile Include="Shapes\Shape.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

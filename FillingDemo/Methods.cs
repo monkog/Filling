@@ -10,238 +10,121 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using FillingDemo.Helpers;
 using Point = System.Windows.Point;
+using Polygon = FillingDemo.Shapes.Polygon;
+using Shape = FillingDemo.Shapes.Shape;
 
 namespace FillingDemo
 {
 	partial class MainWindow
-    {
+	{
+		private readonly Random _random = new Random(DateTime.Now.Millisecond);
+
+		private IEnumerable<Polygon> _polygons;
+
         private void InitializePolygons()
         {
-            GraphicsPath graphicsPath = new GraphicsPath();
             _polygonGraphics = new List<GraphicsPath>();
             _visiblePolygonGraphics = new List<GraphicsPath>();
 
-            //graphicsPath.AddLine(new System.Drawing.Point(100, 100), new System.Drawing.Point(150, 200));
-            //graphicsPath.AddLine(new System.Drawing.Point(150, 200), new System.Drawing.Point(200, 150));
-            //graphicsPath.AddLine(new System.Drawing.Point(200, 150), new System.Drawing.Point(200, 400));
-            //graphicsPath.AddLine(new System.Drawing.Point(200, 400), new System.Drawing.Point(100, 300));
-            //graphicsPath.AddLine(new System.Drawing.Point(100, 300), new System.Drawing.Point(100, 300));
+			var polygon1 = new[]
+			{
+				new Point(100, 100),
+		        new Point(100, 300),
+		        new Point(200, 400),
+		        new Point(200, 150),
+		        new Point(150, 200)
+	        };
 
-            graphicsPath.AddLine(new System.Drawing.Point(100, 100), new System.Drawing.Point(100, 300));
-            graphicsPath.AddLine(new System.Drawing.Point(100, 300), new System.Drawing.Point(200, 400));
-            graphicsPath.AddLine(new System.Drawing.Point(200, 400), new System.Drawing.Point(200, 150));
-            graphicsPath.AddLine(new System.Drawing.Point(200, 150), new System.Drawing.Point(150, 200));
-            graphicsPath.AddLine(new System.Drawing.Point(150, 200), new System.Drawing.Point(100, 100));
-            _polygonGraphics.Add(graphicsPath);
+			var polygon2 = new[]
+			{
+				new Point(800, 300),
+		        new Point(700, 400),
+		        new Point(700, 600),
+		        new Point(800, 500),
+				new Point(1000, 500)
+			};
 
-            graphicsPath = new GraphicsPath();
-            graphicsPath.AddLine(new System.Drawing.Point(800, 300), new System.Drawing.Point(700, 400));
-            graphicsPath.AddLine(new System.Drawing.Point(700, 400), new System.Drawing.Point(700, 600));
-            graphicsPath.AddLine(new System.Drawing.Point(700, 600), new System.Drawing.Point(800, 500));
-            graphicsPath.AddLine(new System.Drawing.Point(800, 500), new System.Drawing.Point(1000, 500));
-            graphicsPath.AddLine(new System.Drawing.Point(1000, 500), new System.Drawing.Point(800, 300));
-            _polygonGraphics.Add(graphicsPath);
+			var polygon3 = new[]
+			{
+				new Point(900, 50),
+		        new Point(700, 270),
+		        new Point(500, 180),
+		        new Point(400, 260),
+				new Point(400, 140)
+			};
 
-            graphicsPath = new GraphicsPath();
-            graphicsPath.AddLine(new System.Drawing.Point(900, 50), new System.Drawing.Point(700, 270));
-            graphicsPath.AddLine(new System.Drawing.Point(700, 270), new System.Drawing.Point(500, 180));
-            graphicsPath.AddLine(new System.Drawing.Point(500, 180), new System.Drawing.Point(400, 260));
-            graphicsPath.AddLine(new System.Drawing.Point(400, 260), new System.Drawing.Point(400, 140));
-            graphicsPath.AddLine(new System.Drawing.Point(400, 140), new System.Drawing.Point(900, 50));
-            _polygonGraphics.Add(graphicsPath);
+			var polygon4 = new[]
+			{
+				new Point(950, 200),
+		        new Point(1050, 400),
+		        new Point(1300, 600),
+		        new Point(1250, 400),
+				new Point(1275, 335),
+				new Point(1100, 140)
+			};
 
-            graphicsPath = new GraphicsPath();
-            graphicsPath.AddLine(new System.Drawing.Point(950, 200), new System.Drawing.Point(1050, 400));
-            graphicsPath.AddLine(new System.Drawing.Point(1050, 400), new System.Drawing.Point(1300, 600));
-            graphicsPath.AddLine(new System.Drawing.Point(1300, 600), new System.Drawing.Point(1250, 400));
-            graphicsPath.AddLine(new System.Drawing.Point(1250, 400), new System.Drawing.Point(1275, 335));
-            graphicsPath.AddLine(new System.Drawing.Point(1275, 335), new System.Drawing.Point(1100, 140));
-            graphicsPath.AddLine(new System.Drawing.Point(1100, 140), new System.Drawing.Point(950, 200));
-            _polygonGraphics.Add(graphicsPath);
+			var polygon5 = new[]
+			{
+				new Point(375, 350),
+				new Point(475, 473),
+		        new Point(550, 570),
+		        new Point(375, 550),
+				new Point(275, 250)
+			};
 
-            graphicsPath = new GraphicsPath();
-            graphicsPath.AddLine(new System.Drawing.Point(375, 350), new System.Drawing.Point(475, 473));
-            graphicsPath.AddLine(new System.Drawing.Point(475, 473), new System.Drawing.Point(550, 570));
-            graphicsPath.AddLine(new System.Drawing.Point(550, 570), new System.Drawing.Point(375, 550));
-            graphicsPath.AddLine(new System.Drawing.Point(375, 550), new System.Drawing.Point(275, 250));
-            graphicsPath.AddLine(new System.Drawing.Point(275, 250), new System.Drawing.Point(375, 350));
-            _polygonGraphics.Add(graphicsPath);
+			var polygon6 = new[]
+			{
+				new Point(100, 500),
+				new Point(160, 523),
+		        new Point(170, 620),
+		        new Point(150, 600),
+				new Point(140, 550)
+			};
 
-            graphicsPath = new GraphicsPath();
-            graphicsPath.AddLine(new System.Drawing.Point(100, 500), new System.Drawing.Point(160, 523));
-            graphicsPath.AddLine(new System.Drawing.Point(160, 523), new System.Drawing.Point(170, 620));
-            graphicsPath.AddLine(new System.Drawing.Point(170, 620), new System.Drawing.Point(150, 600));
-            graphicsPath.AddLine(new System.Drawing.Point(150, 600), new System.Drawing.Point(140, 550));
-            graphicsPath.AddLine(new System.Drawing.Point(140, 550), new System.Drawing.Point(100, 500));
-            _polygonGraphics.Add(graphicsPath);
-        }
+	        _polygons = new[]
+	        {
+				new Polygon(polygon1),
+				new Polygon(polygon2),
+				new Polygon(polygon3),
+				new Polygon(polygon4),
+				new Polygon(polygon5),
+				new Polygon(polygon6)
+	        };
 
-        private void FillPolygons()
-        {
-            Random random = new Random(DateTime.Now.Millisecond);
-            int intRandom = 3 + random.Next() % 4;
-            _background = new Bitmap((int)DrawingCanvas.ActualWidth, (int)DrawingCanvas.ActualHeight);
+	        _polygonGraphics = _polygons.Select(p => p.GraphicsPath).ToList();
+		}
 
-            for (int i = 0; i < intRandom; i++)
-            {
-                GraphicsPath polygon = _polygonGraphics[i];
+		private void FillPolygons()
+		{
+			int polygonCount = _random.Next(3, 6);
+			_background = new Bitmap((int)DrawingCanvas.ActualWidth, (int)DrawingCanvas.ActualHeight);
 
-                byte[] pointTypes = new byte[polygon.PointCount];
-                for (int j = 0; j < pointTypes.Length; j++)
-                    pointTypes[j] = 1;
+			for (int i = 0; i < 6; i++)
+			{
+				var polygon = _polygons.ElementAt(i);
 
-                Point[] points = Array.ConvertAll(polygon.PathPoints, PointFToPoint);
+				try
+				{
+					polygon.EdgesSortFill(_bitmaps[_random.Next() % polygonCount], _background, 180);
+				}
+				catch (Exception)
+				{
+					Bitmap bitmap = new Bitmap(1, 1);
+					bitmap.SetPixel(0, 0, System.Drawing.Color.FromArgb(255, _random.Next(255), _random.Next(255), _random.Next(255)));
+					polygon.EdgesSortFill(bitmap, _background, 180);
+				}
 
-                try
-                {
-                    EdgesSortFill(_bitmaps[random.Next() % intRandom], _background, points, pointTypes, 180);
-                }
-                catch (Exception)
-                {
-                    Bitmap colourBitmap = new Bitmap(1, 1);
-                    colourBitmap.SetPixel(0, 0, System.Drawing.Color.FromArgb(255, random.Next() % 255
-                        , random.Next() % 255, random.Next() % 255));
-                    EdgesSortFill(colourBitmap, _background, points, pointTypes, 180);
-                }
+				_visiblePolygonGraphics.Add(polygon.GraphicsPath);
+			}
+			DrawingCanvas.Background = _background.CreateImageBrush();
+		}
 
-                _visiblePolygonGraphics.Add(polygon);
-            }
-            DrawingCanvas.Background = _background.CreateImageBrush();
-        }
-
-        private void EdgesSortFill(Bitmap brushBitmap, Bitmap bitmap, Point[] points, byte[] pointTypes, int opacity)
-        {
-            List<PointInfo> activePointsList = new List<PointInfo>();
-            List<PointInfo> pointInfoList;
-
-            CreateActiveEdgesList(points, out pointInfoList, pointTypes);
-            pointInfoList.Sort((p, q) => (p.StartPoint.Y >= q.StartPoint.Y) ? 1 : -1);
-
-            int scanLine = (int)pointInfoList[0].StartPoint.Y;
-
-            do
-            {
-                while (pointInfoList.Count > 0 && (int)pointInfoList[0].CurrentPoint.Y == scanLine)
-                {
-                    // Ignore horizontal lines.
-                    if (pointInfoList[0].StartPoint.Y != pointInfoList[0].EndPoint.Y)
-                        activePointsList.Add(pointInfoList[0]);
-                    pointInfoList.Remove(pointInfoList[0]);
-                }
-
-                activePointsList.Sort((p, q) => (p.CurrentPoint.X >= q.CurrentPoint.X) ? 1 : -1);
-
-                for (int i = 0; i < activePointsList.Count - 1; i += 2)
-                {
-                    PointInfo currentPointInfo = activePointsList[i];
-                    PointInfo nextPointInfo = activePointsList[i + 1];
-
-                    if (currentPointInfo.CurrentPoint.Y == currentPointInfo.EndPoint.Y)
-                    {
-                        i -= 2;
-                        activePointsList.Remove(currentPointInfo);
-                        continue;
-                    }
-
-                    if (nextPointInfo.CurrentPoint.Y == nextPointInfo.EndPoint.Y)
-                    {
-                        i -= 2;
-                        activePointsList.Remove(nextPointInfo);
-                        continue;
-                    }
-
-                    int startX, endX;
-                    startX = (int)currentPointInfo.CurrentPoint.X;
-                    endX = (int)nextPointInfo.CurrentPoint.X;
-
-                    for (int k = startX; k < endX; k++)
-                    {
-                        System.Drawing.Color color = brushBitmap.GetPixel(k % brushBitmap.Width,
-                            scanLine % brushBitmap.Height);
-                        color = System.Drawing.Color.FromArgb(opacity % 256, color.R, color.G, color.B);
-                        bitmap.SetPixel(k, scanLine, color);
-                    }
-                }
-
-                List<PointInfo> pointsToRemove = new List<PointInfo>();
-
-                for (int i = 0; i < activePointsList.Count; i++)
-                    if ((int)activePointsList[i].EndPoint.Y == scanLine)
-                        pointsToRemove.Add(activePointsList[i]);
-
-                for (int i = 0; i < pointsToRemove.Count; i++)
-                    activePointsList.Remove(pointsToRemove[i]);
-
-                scanLine++;
-
-                foreach (PointInfo pointInfo in activePointsList)
-                {
-                    Point tmpPoint = new Point(pointInfo.CurrentPoint.X + pointInfo.Delta,
-                        pointInfo.CurrentPoint.Y + 1);
-                    pointInfo.CurrentPoint = tmpPoint;
-                }
-
-            } while (pointInfoList.Count != 0 || activePointsList.Count != 0);
-        }
-
-        private void CreateActiveEdgesList(Point[] points, out List<PointInfo> pointInfoList, byte[] pointTypes)
-        {
-            pointInfoList = new List<PointInfo>();
-
-            for (int i = 0; i < points.Length; i++)
-            {
-                List<Point> helperNextPointList = new List<Point>();
-                List<PointInfo> helperCurrentPointList = new List<PointInfo>();
-                bool isFirstPoint = true;
-
-                while (i < pointTypes.Length && (pointTypes[i] != 0 || isFirstPoint))
-                {
-                    isFirstPoint = false;
-                    PointInfo pointInfo = new PointInfo();
-                    Point startPoint = new Point(points[i].X, points[i].Y);
-                    pointInfo.StartPoint = startPoint;
-                    helperCurrentPointList.Add(pointInfo);
-                    helperNextPointList.Add(points[i]);
-                    i++;
-                }
-
-                if (i < pointTypes.Length && pointTypes[i] == 0)
-                    i--;
-
-                for (int j = 0; j < helperCurrentPointList.Count; j++)
-                {
-                    Point tmpPoint = helperNextPointList[(j + 1) % helperCurrentPointList.Count];
-
-                    // Keep the point with lower y coordinate the m_startPoint.
-                    if (helperCurrentPointList[j].StartPoint.Y > tmpPoint.Y)
-                    {
-                        helperCurrentPointList[j].EndPoint = helperCurrentPointList[j].StartPoint;
-                        helperCurrentPointList[j].StartPoint = tmpPoint;
-                    }
-                    else
-                        helperCurrentPointList[j].EndPoint = tmpPoint;
-
-                    double deltaX = helperCurrentPointList[j].EndPoint.X - helperCurrentPointList[j].StartPoint.X;
-                    double deltaY = helperCurrentPointList[j].EndPoint.Y - helperCurrentPointList[j].StartPoint.Y;
-
-                    // Calculate the difference between next x-coordinates.
-                    if (deltaX != 0 && deltaY != 0)
-                        helperCurrentPointList[j].Delta = 1 / (deltaY / deltaX);
-                    else
-                        helperCurrentPointList[j].Delta = 0;
-
-                    helperCurrentPointList[j].CurrentPoint = helperCurrentPointList[j].StartPoint;
-                    pointInfoList.Add(helperCurrentPointList[j]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Second way to create path from text.
-        /// Actually the function is never called. 
-        /// I put it here jus to keep in mind that there is another way to convert text to graphics.
-        /// </summary>
-        private void ConvertTextToSmootherGraphics()
+		/// <summary>
+		/// Second way to create path from text.
+		/// Actually the function is never called. 
+		/// I put it here jus to keep in mind that there is another way to convert text to graphics.
+		/// </summary>
+		private void ConvertTextToSmootherGraphics()
         {
             FormattedText text = new FormattedText(InputTextBox.Text, Thread.CurrentThread.CurrentUICulture,
                 FlowDirection.LeftToRight,
@@ -279,7 +162,7 @@ namespace FillingDemo
             _textCanvas.Height = (int)(boundRect.Size.Height + boundRect.Y + 1);
             Bitmap bitmap = new Bitmap((int)(boundRect.Size.Width + boundRect.X + 1),
                 (int)(boundRect.Size.Height + boundRect.Y + 1));
-            Point[] points = Array.ConvertAll(floatPoints, PointFToPoint);
+            var points = floatPoints.Select(p => p.ToWindowsPoint());
 
             Random random = new Random(DateTime.Now.Millisecond);
 
@@ -288,7 +171,7 @@ namespace FillingDemo
                 , _color.G, _color.B));
             try
             {
-                EdgesSortFill(colourBitmap, bitmap, points, pointTypes, 255);
+	            Shape.EdgesSortFill(colourBitmap, bitmap, points, pointTypes, 255);
             }
             catch (Exception)
             {
@@ -301,16 +184,6 @@ namespace FillingDemo
             _textCanvas.Background = bitmap.CreateImageBrush();
             DrawingCanvas.Children.Add(_textCanvas);
             _textCanvas.MouseDown += TextCanvas_MouseDown;
-        }
-
-        public static Point PointFToPoint(PointF pointF)
-        {
-            return new Point(((int)pointF.X), ((int)pointF.Y));
-        }
-
-        public static PointF PointToPointF(Point point)
-        {
-            return new PointF(((float)point.X), ((float)point.Y));
         }
 
         public Point DoLinesIntersect(PointInfo lineA, PointInfo lineB)
@@ -371,168 +244,161 @@ namespace FillingDemo
             return new Point(-1, -1);
         }
 
-        private void WeilerAtherton()
-        {
-            Vector offset = VisualTreeHelper.GetOffset(_textCanvas);
+    //    private void WeilerAtherton()
+    //    {
+    //        Vector offset = VisualTreeHelper.GetOffset(_textCanvas);
 
-            foreach (GraphicsPath polygonGraphic in _visiblePolygonGraphics)
-            {
-                RectangleF polygonRectangle = polygonGraphic.GetBounds();
+    //        foreach (GraphicsPath polygonGraphic in _visiblePolygonGraphics)
+    //        {
+    //            RectangleF polygonRectangle = polygonGraphic.GetBounds();
 
-                if (offset.X > polygonRectangle.X + polygonRectangle.Width
-                    || offset.X + _textCanvas.Width < polygonRectangle.X
-                    || offset.Y > polygonRectangle.Y + polygonRectangle.Height
-                    || offset.Y + _textCanvas.Height < polygonRectangle.Y)
-                    continue;
+    //            if (offset.X > polygonRectangle.X + polygonRectangle.Width
+    //                || offset.X + _textCanvas.Width < polygonRectangle.X
+    //                || offset.Y > polygonRectangle.Y + polygonRectangle.Height
+    //                || offset.Y + _textCanvas.Height < polygonRectangle.Y)
+    //                continue;
 
-                Point[] polygonPoints = Array.ConvertAll(polygonGraphic.PathPoints, PointFToPoint);
-                List<PointInfo> polygonPointList;
+    //            var polygonPoints = polygonGraphic.PathPoints.Select(p => p.ToWindowsPoint());
+    //            var polygonPointList = Shape.CreateActiveEdgesList(polygonPoints, polygonGraphic.PathTypes);
 
-                CreateActiveEdgesList(polygonPoints, out polygonPointList, polygonGraphic.PathTypes);
+    //            var textPoints = _textGraphicsPath.PathPoints.Select(p => p.ToWindowsPoint());
+    //            var textPointList = Shape.CreateActiveEdgesList(textPoints, _textGraphicsPath.PathTypes);
 
-                Point[] textPoints = Array.ConvertAll(_textGraphicsPath.PathPoints, PointFToPoint);
-                List<PointInfo> textPointList;
+    //            List<Point> intersectingPoints = new List<Point>();
+    //            LinkedList<PathPoint> currentPolygonPointsList = new LinkedList<PathPoint>();
+    //            LinkedList<PathPoint> currentTextPointsList = new LinkedList<PathPoint>();
 
-                CreateActiveEdgesList(textPoints, out textPointList, _textGraphicsPath.PathTypes);
+    //            for (int j = 0; j < polygonPoints.Count(); j++)
+    //                currentPolygonPointsList.AddLast(new PathPoint(polygonPoints.ElementAt(j), polygonGraphic.PathTypes[j]));
+    //            for (int j = 0; j < textPoints.Count(); j++)
+    //                currentTextPointsList.AddLast(new PathPoint(textPoints.ElementAt(j), _textGraphicsPath.PathTypes[j]));
 
-                List<Point> intersectingPoints = new List<Point>();
-                LinkedList<PathPoint> currentPolygonPointsList = new LinkedList<PathPoint>();
-                LinkedList<PathPoint> currentTextPointsList = new LinkedList<PathPoint>();
+    //            foreach (var textLine in textPointList)
+    //            {
+    //                PointInfo pointInfo = new PointInfo();
+    //                pointInfo.StartPoint = new Point(offset.X + textLine.StartPoint.X, offset.Y + textLine.StartPoint.Y);
+    //                pointInfo.EndPoint = new Point(offset.X + textLine.EndPoint.X, offset.Y + textLine.EndPoint.Y);
+    //                pointInfo.Delta = textLine.Delta;
 
-                for (int j = 0; j < polygonPoints.Length; j++)
-                    currentPolygonPointsList.AddLast(new PathPoint(polygonPoints[j], polygonGraphic.PathTypes[j]));
-                for (int j = 0; j < textPoints.Length; j++)
-                    currentTextPointsList.AddLast(new PathPoint(textPoints[j], _textGraphicsPath.PathTypes[j]));
+    //                foreach (var polygonLine in polygonPointList)
+    //                {
+    //                    Point foundPoint = DoLinesIntersect(pointInfo, polygonLine);
+    //                    if (foundPoint.X != -1)
+    //                    {
+    //                        intersectingPoints.Add(foundPoint);
+    //                        LinkedListNode<PathPoint> node = null;
 
-                foreach (var textLine in textPointList)
-                {
-                    PointInfo pointInfo = new PointInfo();
-                    pointInfo.StartPoint = new Point(offset.X + textLine.StartPoint.X, offset.Y + textLine.StartPoint.Y);
-                    pointInfo.EndPoint = new Point(offset.X + textLine.EndPoint.X, offset.Y + textLine.EndPoint.Y);
-                    pointInfo.Delta = textLine.Delta;
+    //                        foreach (PathPoint pathPoint in currentPolygonPointsList)
+    //                            if (pathPoint.Point == polygonLine.EndPoint)
+    //                            {
+    //                                node = currentPolygonPointsList.Find(pathPoint);
+    //                                break;
+    //                            }
 
-                    foreach (var polygonLine in polygonPointList)
-                    {
-                        Point foundPoint = DoLinesIntersect(pointInfo, polygonLine);
-                        if (foundPoint.X != -1)
-                        {
-                            intersectingPoints.Add(foundPoint);
-                            LinkedListNode<PathPoint> node = null;
+    //                        currentPolygonPointsList.AddAfter(node, new PathPoint(foundPoint, 1));
+    //                        node = null;
 
-                            foreach (PathPoint pathPoint in currentPolygonPointsList)
-                                if (pathPoint.Point == polygonLine.EndPoint)
-                                {
-                                    node = currentPolygonPointsList.Find(pathPoint);
-                                    break;
-                                }
+    //                        foreach (PathPoint textPoint in currentTextPointsList)
+    //                            if (textPoint.Point == textLine.EndPoint)
+    //                            {
+    //                                node = currentTextPointsList.Find(textPoint);
+    //                                break;
+    //                            }
 
-                            currentPolygonPointsList.AddAfter(node, new PathPoint(foundPoint, 1));
-                            node = null;
+    //                        currentTextPointsList.AddAfter(node, new PathPoint(new Point(foundPoint.X - offset.X, foundPoint.Y - offset.Y), 1));
+    //                    }
+    //                }
+    //            }
 
-                            foreach (PathPoint textPoint in currentTextPointsList)
-                                if (textPoint.Point == textLine.EndPoint)
-                                {
-                                    node = currentTextPointsList.Find(textPoint);
-                                    break;
-                                }
+    //            if (intersectingPoints.Count == 0)
+    //                continue;
 
-                            currentTextPointsList.AddAfter(node, new PathPoint(new Point(foundPoint.X - offset.X, foundPoint.Y - offset.Y), 1));
-                        }
-                    }
-                }
+    //            polygonPoints = new Point[currentPolygonPointsList.Count];
+    //            textPoints = new Point[currentTextPointsList.Count];
+    //            byte[] polygonBytes = new byte[currentPolygonPointsList.Count];
+    //            byte[] textBytes = new byte[currentTextPointsList.Count];
 
-                if (intersectingPoints.Count == 0)
-                    continue;
+    //            PathPoint[] polygonPointsArray = currentPolygonPointsList.ToArray();
+    //            PathPoint[] textPointsArray = currentTextPointsList.ToArray();
 
-                polygonPoints = new Point[currentPolygonPointsList.Count];
-                textPoints = new Point[currentTextPointsList.Count];
-                byte[] polygonBytes = new byte[currentPolygonPointsList.Count];
-                byte[] textBytes = new byte[currentTextPointsList.Count];
+    //            for (int j = 0; j < currentPolygonPointsList.Count; j++)
+    //            {
+    //                polygonPoints.ElementAt(j) = polygonPointsArray[j].Point;
+    //                polygonBytes[j] = polygonPointsArray[j].Type;
+    //            }
+    //            for (int j = 0; j < currentTextPointsList.Count; j++)
+    //            {
+    //                textPoints.ElementAt(j) = textPointsArray[j].Point;
+    //                textBytes[j] = textPointsArray[j].Type;
+    //            }
 
-                PathPoint[] polygonPointsArray = currentPolygonPointsList.ToArray();
-                PathPoint[] textPointsArray = currentTextPointsList.ToArray();
+    //            polygonPointList = Shape.CreateActiveEdgesList(polygonPoints, polygonBytes);
+				//textPointList = Shape.CreateActiveEdgesList(textPoints, textBytes);
 
-                for (int j = 0; j < currentPolygonPointsList.Count; j++)
-                {
-                    polygonPoints[j] = polygonPointsArray[j].Point;
-                    polygonBytes[j] = polygonPointsArray[j].Type;
-                }
-                for (int j = 0; j < currentTextPointsList.Count; j++)
-                {
-                    textPoints[j] = textPointsArray[j].Point;
-                    textBytes[j] = textPointsArray[j].Type;
-                }
+				//List<Point> entryList = new List<Point>();
+    //            for (int j = 0; j < intersectingPoints.Count; j += 2)
+    //                entryList.Add(intersectingPoints[j]);
 
-                polygonPointList = new List<PointInfo>();
-                textPointList = new List<PointInfo>();
+    //            int i = 0;
+    //            List<PathPoint> newFigurePoints = new List<PathPoint>();
+    //            Point startPoint = intersectingPoints[0];
+    //            newFigurePoints.Add(new PathPoint(intersectingPoints[0], 0));
+    //            intersectingPoints.Remove(intersectingPoints[0]);
+    //            entryList.Remove(entryList[0]);
+    //            Point lastPoint = startPoint;
 
-                CreateActiveEdgesList(polygonPoints, out polygonPointList, polygonBytes);
-                CreateActiveEdgesList(textPoints, out textPointList, textBytes);
+    //            do
+    //            {
+    //                do
+    //                {
+    //                    if (i == 0)
+    //                    {
+    //                        int currentPointIndex = (polygonPointList.FindIndex(p => p.StartPoint.Equals(lastPoint)) + 1);
+    //                        Point currentPolygonPoint = polygonPointList[currentPointIndex].StartPoint;
+    //                        do
+    //                        {
+    //                            currentPointIndex = (polygonPointList.FindIndex(p => p.StartPoint.Equals(lastPoint)) + 1);
+    //                            currentPolygonPoint = polygonPointList[currentPointIndex].StartPoint;
+    //                            lastPoint = currentPolygonPoint;
 
-                List<Point> entryList = new List<Point>();
-                for (int j = 0; j < intersectingPoints.Count; j += 2)
-                    entryList.Add(intersectingPoints[j]);
+    //                            if (lastPoint == startPoint)
+    //                                continue;
 
-                int i = 0;
-                List<PathPoint> newFigurePoints = new List<PathPoint>();
-                Point startPoint = intersectingPoints[0];
-                newFigurePoints.Add(new PathPoint(intersectingPoints[0], 0));
-                intersectingPoints.Remove(intersectingPoints[0]);
-                entryList.Remove(entryList[0]);
-                Point lastPoint = startPoint;
+    //                            newFigurePoints.Add(new PathPoint(currentPolygonPoint, 1));
+    //                            currentPointIndex++;
+    //                        } while ((intersectingPoints.Count > 0 && lastPoint != intersectingPoints[0])
+    //                            || (intersectingPoints.Count == 0 && lastPoint != startPoint));
+    //                    }
+    //                    else
+    //                    {
+    //                        int currentTextIndex = (textPointList.FindIndex(
+    //                            p => p.StartPoint.Equals(new Point(lastPoint.X - offset.X, lastPoint.Y - offset.Y))) + 1) % textPointList.Count;
+    //                        Point currentTextPoint = textPointList[currentTextIndex].StartPoint;
+    //                        do
+    //                        {
+    //                            currentTextIndex = (textPointList.FindIndex(
+    //                            p => p.StartPoint.Equals(new Point(lastPoint.X - offset.X, lastPoint.Y - offset.Y))) + 1) % textPointList.Count;
+    //                            currentTextPoint = new Point(textPointList[currentTextIndex].StartPoint.X + offset.X
+    //                                , textPointList[currentTextIndex].StartPoint.Y + offset.Y);
+    //                            lastPoint = currentTextPoint;
 
-                do
-                {
-                    do
-                    {
-                        if (i == 0)
-                        {
-                            int currentPointIndex = (polygonPointList.FindIndex(p => p.StartPoint.Equals(lastPoint)) + 1);
-                            Point currentPolygonPoint = polygonPointList[currentPointIndex].StartPoint;
-                            do
-                            {
-                                currentPointIndex = (polygonPointList.FindIndex(p => p.StartPoint.Equals(lastPoint)) + 1);
-                                currentPolygonPoint = polygonPointList[currentPointIndex].StartPoint;
-                                lastPoint = currentPolygonPoint;
+    //                            if (lastPoint == startPoint)
+    //                                continue;
 
-                                if (lastPoint == startPoint)
-                                    continue;
+    //                            newFigurePoints.Add(new PathPoint(currentTextPoint, 1));
+    //                            currentTextIndex++;
+    //                        } while ((intersectingPoints.Count > 0 && lastPoint != intersectingPoints[0])
+    //                            || (intersectingPoints.Count == 0 && lastPoint != startPoint));
+    //                    }
+    //                    intersectingPoints.Remove(lastPoint);
+    //                    i = (i + 1) % 2;
+    //                } while (lastPoint != startPoint);
+    //            } while (entryList.Count > 0);
 
-                                newFigurePoints.Add(new PathPoint(currentPolygonPoint, 1));
-                                currentPointIndex++;
-                            } while ((intersectingPoints.Count > 0 && lastPoint != intersectingPoints[0])
-                                || (intersectingPoints.Count == 0 && lastPoint != startPoint));
-                        }
-                        else
-                        {
-                            int currentTextIndex = (textPointList.FindIndex(
-                                p => p.StartPoint.Equals(new Point(lastPoint.X - offset.X, lastPoint.Y - offset.Y))) + 1) % textPointList.Count;
-                            Point currentTextPoint = textPointList[currentTextIndex].StartPoint;
-                            do
-                            {
-                                currentTextIndex = (textPointList.FindIndex(
-                                p => p.StartPoint.Equals(new Point(lastPoint.X - offset.X, lastPoint.Y - offset.Y))) + 1) % textPointList.Count;
-                                currentTextPoint = new Point(textPointList[currentTextIndex].StartPoint.X + offset.X
-                                    , textPointList[currentTextIndex].StartPoint.Y + offset.Y);
-                                lastPoint = currentTextPoint;
+    //            return;
+    //            // PointF[] points = Array.ConvertAll(newFigurePoints.ToArray(), new Converter<Point, PointF>(pointToPointF));
 
-                                if (lastPoint == startPoint)
-                                    continue;
-
-                                newFigurePoints.Add(new PathPoint(currentTextPoint, 1));
-                                currentTextIndex++;
-                            } while ((intersectingPoints.Count > 0 && lastPoint != intersectingPoints[0])
-                                || (intersectingPoints.Count == 0 && lastPoint != startPoint));
-                        }
-                        intersectingPoints.Remove(lastPoint);
-                        i = (i + 1) % 2;
-                    } while (lastPoint != startPoint);
-                } while (entryList.Count > 0);
-
-                return;
-                // PointF[] points = Array.ConvertAll(newFigurePoints.ToArray(), new Converter<Point, PointF>(pointToPointF));
-
-            }
-        }
+    //        }
+    //    }
     }
 }

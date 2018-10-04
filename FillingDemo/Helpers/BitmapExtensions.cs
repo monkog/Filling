@@ -19,5 +19,15 @@ namespace FillingDemo.Helpers
 
 			return new ImageBrush(bitmapSource);
 		}
+
+		public static void DrawLine(this Bitmap resultBitmap, Bitmap texture, int opacity, int startX, int endX, int scanLine)
+		{
+			for (int k = startX; k < endX; k++)
+			{
+				var color = texture.GetPixel(k % texture.Width, scanLine % texture.Height);
+				color = System.Drawing.Color.FromArgb(opacity % 256, color.R, color.G, color.B);
+				resultBitmap.SetPixel(k, scanLine, color);
+			}
+		}
 	}
 }
