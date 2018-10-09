@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,7 +13,7 @@ using Point = System.Windows.Point;
 
 namespace FillingDemo
 {
-	public partial class MainWindow
+	public partial class MainWindow : INotifyPropertyChanged
 	{
 		#region globals
 		private List<Bitmap> _bitmaps;
@@ -21,18 +22,42 @@ namespace FillingDemo
 		private bool _isMouseDown;
 		private Bitmap _background;
 		private int _textSize;
+		private string _text;
 		private System.Drawing.Color _color;
 		#endregion
+
+		public int TextSize
+		{
+			get { return _textSize; }
+			set
+			{
+				if (_textSize == value) return;
+				_textSize = value;
+				OnPropertyChanged(nameof(TextSize));
+			}
+		}
+
+		public string Text
+		{
+			get { return _text; }
+			set
+			{
+				if (_text == value) return;
+				_text = value;
+				OnPropertyChanged(nameof(Text));
+			}
+		}
 
 		public MainWindow()
 		{
 			InitializeComponent();
+			DataContext = this;
 		}
 
 		#region events
 		private void Window_Loaded_1(object sender, RoutedEventArgs e)
 		{
-			_textSize = 200;
+			TextSize = 200;
 			_isMouseDown = false;
 			_color = System.Drawing.Color.MidnightBlue;
 			MouseUp += MainWindow_MouseUp;
@@ -105,14 +130,17 @@ namespace FillingDemo
 
 		private void ConvertTextToGraphics()
 		{
-			var text = new Text(InputTextBox.Text, float.Parse(SizeTextBox.Text));
+			var text = new Text(Text, TextSize);
 
 			try
 			{
 				var resultBitmap = text.Draw(_color);
-				_textCanvas = new Canvas { Width = resultBitmap.Width, Height = resultBitmap.Height };
-
-				_textCanvas.Background = resultBitmap.CreateImageBrush();
+				_textCanvas = new Canvas
+				{
+					Width = resultBitmap.Width,
+					Height = resultBitmap.Height,
+					Background = resultBitmap.CreateImageBrush()
+				};
 			}
 			catch (Exception)
 			{
@@ -130,12 +158,6 @@ namespace FillingDemo
 			if (_textCanvas != null)
 				DrawingCanvas.Children.Remove(_textCanvas);
 
-			if (InputTextBox.Text == "")
-				return;
-
-			SizeTextBox.RaiseEvent(new RoutedEventArgs(LostFocusEvent));
-			_textSize = int.Parse(SizeTextBox.Text);
-
 			ConvertTextToGraphics();
 		}
 
@@ -144,22 +166,13 @@ namespace FillingDemo
 			if (e.Key == System.Windows.Input.Key.Enter)
 				SetTextButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
 		}
-
-		private void SizeTextBox_LostFocus(object sender, RoutedEventArgs e)
-		{
-			try
-			{
-				int.TryParse(SizeTextBox.Text, out var textSize);
-
-				if (textSize <= 0)
-					throw new Exception();
-			}
-			catch (Exception)
-			{
-				SizeTextBox.Text = _textSize.ToString();
-				System.Windows.MessageBox.Show("You have to type a positive number.");
-			}
-		}
 		#endregion
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void OnPropertyChanged(string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
