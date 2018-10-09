@@ -1,11 +1,12 @@
 ﻿using System;
+using FillingDemo.Shapes;
 using Point = System.Windows.Point;
 
 namespace FillingDemo
 {
 	partial class MainWindow
 	{
-		public Point DoLinesIntersect(PointInfo lineA, PointInfo lineB)
+		public Point DoLinesIntersect(ActiveEdge lineA, ActiveEdge lineB)
 		{
 			double deltaA, deltaB;
 			if (lineA.Delta == 0)

@@ -10,7 +10,7 @@ namespace FillingDemo.Shapes
 	{
 		public static void EdgesSortFill(Bitmap texture, Bitmap resultBitmap, IEnumerable<Point> points, byte[] pointTypes, int opacity)
 		{
-			var polygonEdges = new List<PointInfo>();
+			var polygonEdges = new List<ActiveEdge>();
 			var activeEdges = CreateActiveEdgesList(points, pointTypes);
 			activeEdges.Sort((p, q) => (p.StartPoint.Y >= q.StartPoint.Y) ? 1 : -1);
 			int scanLine = (int)activeEdges[0].StartPoint.Y;
@@ -23,8 +23,8 @@ namespace FillingDemo.Shapes
 
 				for (int i = 0; i < polygonEdges.Count - 1; i += 2)
 				{
-					PointInfo currentPointInfo = polygonEdges[i];
-					PointInfo nextPointInfo = polygonEdges[i + 1];
+					var currentPointInfo = polygonEdges[i];
+					var nextPointInfo = polygonEdges[i + 1];
 
 					if (currentPointInfo.CurrentPoint.Y == currentPointInfo.EndPoint.Y)
 					{
@@ -51,22 +51,21 @@ namespace FillingDemo.Shapes
 			} while (activeEdges.Any() || polygonEdges.Any());
 		}
 
-		public static List<PointInfo> CreateActiveEdgesList(IEnumerable<Point> points, byte[] pointTypes)
+		public static List<ActiveEdge> CreateActiveEdgesList(IEnumerable<Point> points, byte[] pointTypes)
 		{
-			var pointInfoList = new List<PointInfo>();
+			var pointInfoList = new List<ActiveEdge>();
 
 			for (int i = 0; i < points.Count(); i++)
 			{
-				List<Point> helperNextPointList = new List<Point>();
-				List<PointInfo> helperCurrentPointList = new List<PointInfo>();
+				var helperNextPointList = new List<Point>();
+				var helperCurrentPointList = new List<ActiveEdge>();
 				bool isFirstPoint = true;
 
 				while (i < pointTypes.Length && (pointTypes[i] != 0 || isFirstPoint))
 				{
 					isFirstPoint = false;
-					PointInfo pointInfo = new PointInfo();
 					Point startPoint = new Point(points.ElementAt(i).X, points.ElementAt(i).Y);
-					pointInfo.StartPoint = startPoint;
+					var pointInfo = new ActiveEdge(startPoint, startPoint);
 					helperCurrentPointList.Add(pointInfo);
 					helperNextPointList.Add(points.ElementAt(i));
 					i++;
@@ -77,7 +76,7 @@ namespace FillingDemo.Shapes
 
 				for (int j = 0; j < helperCurrentPointList.Count; j++)
 				{
-					Point tmpPoint = helperNextPointList[(j + 1) % helperCurrentPointList.Count];
+					var tmpPoint = helperNextPointList[(j + 1) % helperCurrentPointList.Count];
 
 					// Keep the point with lower y coordinate the m_startPoint.
 					if (helperCurrentPointList[j].StartPoint.Y > tmpPoint.Y)
