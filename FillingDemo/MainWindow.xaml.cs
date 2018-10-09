@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -15,16 +13,17 @@ namespace FillingDemo
 {
 	public partial class MainWindow : INotifyPropertyChanged
 	{
-		#region globals
-		private List<Bitmap> _bitmaps;
 		private Canvas _textCanvas;
-		private Point _lastMousePosition;
-		private bool _isMouseDown;
-		private Bitmap _background;
+
 		private int _textSize;
+
 		private string _text;
+
 		private System.Drawing.Color _color;
-		#endregion
+
+		private Point _lastMousePosition;
+
+		private bool _isMouseDown;
 
 		public int TextSize
 		{
@@ -63,17 +62,8 @@ namespace FillingDemo
 			MouseUp += MainWindow_MouseUp;
 			MouseMove += MainWindow_MouseMove;
 			KeyDown += MainWindow_KeyDown;
-
-			// Initialize bitmaps.
-			_bitmaps = new List<Bitmap>
-			{
-				Properties.Resources.m_stars,
-				Properties.Resources.m_darkClouds,
-				Properties.Resources.m_stone
-			};
-
-			InitializePolygons();
-			FillPolygons();
+			var background = new Background((int)DrawingCanvas.ActualWidth, (int)DrawingCanvas.ActualHeight);
+			DrawingCanvas.Background = background.Draw();
 		}
 
 		private void TextCanvas_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -122,7 +112,7 @@ namespace FillingDemo
 
 			if (dialogResult != System.Windows.Forms.DialogResult.OK) return;
 
-			ColorCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(colorDialog.Color.A, colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B));
+			ColorCanvas.Background = new SolidColorBrush(Color.FromArgb(colorDialog.Color.A, colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B));
 			_color = colorDialog.Color;
 			DrawingCanvas.Children.Remove(_textCanvas);
 			ConvertTextToGraphics();
