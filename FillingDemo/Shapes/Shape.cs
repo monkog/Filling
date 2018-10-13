@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using FillingDemo.Helpers;
 using Point = System.Windows.Point;
@@ -8,100 +9,75 @@ namespace FillingDemo.Shapes
 {
 	public abstract class Shape
 	{
-		public static void EdgesSortFill(Bitmap texture, Bitmap resultBitmap, IEnumerable<Point> points, byte[] pointTypes, int opacity)
+		/// <summary>
+		/// Gets the graphics path.
+		/// </summary>
+		public GraphicsPath GraphicsPath { get; protected set; }
+
+		/// <summary>
+		/// Fills this object with the given texture using active edge sort fill.
+		/// </summary>
+		/// <param name="texture">Texture to fill.</param>
+		/// <param name="resultBitmap">Resulting bitmap containing this object.</param>
+		/// <param name="opacity">Opacity of the texture.</param>
+		public void EdgesSortFill(Bitmap texture, Bitmap resultBitmap, int opacity)
 		{
-			var polygonEdges = new List<ActiveEdge>();
-			var activeEdges = CreateActiveEdgesList(points, pointTypes);
-			activeEdges.Sort((p, q) => (p.StartPoint.Y >= q.StartPoint.Y) ? 1 : -1);
-			int scanLine = (int)activeEdges[0].StartPoint.Y;
+			var activeEdges = new List<ActiveEdge>();
+			var polygonEdges = CreateActiveEdgesList(GraphicsPath);
+			polygonEdges.Sort((p, q) => (p.StartPoint.Y >= q.StartPoint.Y) ? 1 : -1);
+			var scanLine = (int)polygonEdges.First().StartPoint.Y;
 
 			do
 			{
-				polygonEdges.AddRange(activeEdges.Where(edge => edge.CurrentPoint.Y == scanLine && edge.StartPoint.Y != edge.EndPoint.Y));
-				activeEdges.RemoveAll(edge => edge.CurrentPoint.Y == scanLine);
-				polygonEdges.Sort((p, q) => (p.CurrentPoint.X >= q.CurrentPoint.X) ? 1 : -1);
+				activeEdges.AddRange(polygonEdges.Where(edge => edge.CurrentPoint.Y == scanLine && !edge.IsHorizontal));
+				polygonEdges.RemoveAll(edge => edge.CurrentPoint.Y == scanLine);
+				activeEdges.Sort((p, q) => (p.CurrentPoint.X >= q.CurrentPoint.X) ? 1 : -1);
 
-				for (int i = 0; i < polygonEdges.Count - 1; i += 2)
+				for (int i = 0; i < activeEdges.Count - 1; i += 2)
 				{
-					var currentPointInfo = polygonEdges[i];
-					var nextPointInfo = polygonEdges[i + 1];
+					var activeEdge = activeEdges[i];
+					var nextActiveEdge = activeEdges[i + 1];
 
-					if (currentPointInfo.CurrentPoint.Y == currentPointInfo.EndPoint.Y)
+					if (activeEdge.IsEdgeEnd)
 					{
 						i -= 2;
-						polygonEdges.Remove(currentPointInfo);
+						activeEdges.Remove(activeEdge);
 						continue;
 					}
 
-					if (nextPointInfo.CurrentPoint.Y == nextPointInfo.EndPoint.Y)
+					if (nextActiveEdge.IsEdgeEnd)
 					{
 						i -= 2;
-						polygonEdges.Remove(nextPointInfo);
+						activeEdges.Remove(nextActiveEdge);
 						continue;
 					}
 
-					var startX = (int)currentPointInfo.CurrentPoint.X;
-					var endX = (int)nextPointInfo.CurrentPoint.X;
+					var startX = (int)activeEdge.CurrentPoint.X;
+					var endX = (int)nextActiveEdge.CurrentPoint.X;
 					resultBitmap.DrawLine(texture, opacity, startX, endX, scanLine);
 				}
 
-				polygonEdges = polygonEdges.Where(p => p.EndPoint.Y != scanLine).ToList();
-				polygonEdges.ForEach(point => point.CurrentPoint = new Point(point.CurrentPoint.X + point.Delta, point.CurrentPoint.Y + 1));
+				activeEdges = activeEdges.Where(p => p.EndPoint.Y != scanLine).ToList();
+				activeEdges.ForEach(point => point.CurrentPoint = new Point(point.CurrentPoint.X + point.Delta, point.CurrentPoint.Y + 1));
 				scanLine++;
-			} while (activeEdges.Any() || polygonEdges.Any());
+			} while (polygonEdges.Any() || activeEdges.Any());
 		}
 
-		public static List<ActiveEdge> CreateActiveEdgesList(IEnumerable<Point> points, byte[] pointTypes)
+		private static List<ActiveEdge> CreateActiveEdgesList(GraphicsPath path)
 		{
-			var pointInfoList = new List<ActiveEdge>();
+			var edges = new List<ActiveEdge>();
+			var segments = path.GetPathSegments();
 
-			for (int i = 0; i < points.Count(); i++)
+			foreach (var segment in segments)
 			{
-				var helperNextPointList = new List<Point>();
-				var helperCurrentPointList = new List<ActiveEdge>();
-				bool isFirstPoint = true;
-
-				while (i < pointTypes.Length && (pointTypes[i] != 0 || isFirstPoint))
+				for (int i = 0; i < segment.Count(); i++)
 				{
-					isFirstPoint = false;
-					Point startPoint = new Point(points.ElementAt(i).X, points.ElementAt(i).Y);
-					var pointInfo = new ActiveEdge(startPoint, startPoint);
-					helperCurrentPointList.Add(pointInfo);
-					helperNextPointList.Add(points.ElementAt(i));
-					i++;
-				}
-
-				if (i < pointTypes.Length && pointTypes[i] == 0)
-					i--;
-
-				for (int j = 0; j < helperCurrentPointList.Count; j++)
-				{
-					var tmpPoint = helperNextPointList[(j + 1) % helperCurrentPointList.Count];
-
-					// Keep the point with lower y coordinate the m_startPoint.
-					if (helperCurrentPointList[j].StartPoint.Y > tmpPoint.Y)
-					{
-						helperCurrentPointList[j].EndPoint = helperCurrentPointList[j].StartPoint;
-						helperCurrentPointList[j].StartPoint = tmpPoint;
-					}
-					else
-						helperCurrentPointList[j].EndPoint = tmpPoint;
-
-					double deltaX = helperCurrentPointList[j].EndPoint.X - helperCurrentPointList[j].StartPoint.X;
-					double deltaY = helperCurrentPointList[j].EndPoint.Y - helperCurrentPointList[j].StartPoint.Y;
-
-					// Calculate the difference between next x-coordinates.
-					if (deltaX != 0.0 && deltaY != 0.0)
-						helperCurrentPointList[j].Delta = 1 / (deltaY / deltaX);
-					else
-						helperCurrentPointList[j].Delta = 0;
-
-					helperCurrentPointList[j].CurrentPoint = helperCurrentPointList[j].StartPoint;
-					pointInfoList.Add(helperCurrentPointList[j]);
+					var edge = new ActiveEdge(segment.ElementAt(i), segment.ElementAt((i + 1) % segment.Count()));
+					edges.Add(edge);
 				}
 			}
 
-			return pointInfoList;
+			return edges;
 		}
 	}
 }

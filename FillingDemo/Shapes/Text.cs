@@ -1,11 +1,9 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FillingDemo.Helpers;
 using Color = System.Drawing.Color;
 using FontFamily = System.Drawing.FontFamily;
 using FontStyle = System.Drawing.FontStyle;
@@ -15,11 +13,6 @@ namespace FillingDemo.Shapes
 {
 	public class Text : Shape
 	{
-		/// <summary>
-		/// Gets the graphics path.
-		/// </summary>
-		public GraphicsPath GraphicsPath { get; }
-
 		public Text(string text, float fontSize)
 		{
 			GraphicsPath = ConvertTextToGraphics(text, fontSize);
@@ -55,12 +48,11 @@ namespace FillingDemo.Shapes
 		{
 			var boundRect = GraphicsPath.GetBounds();
 			var resultBitmap = new Bitmap((int)(boundRect.Size.Width + boundRect.X + 1), (int)(boundRect.Size.Height + boundRect.Y + 1));
-			var pathPoints = GraphicsPath.PathPoints.Select(p => p.ToWindowsPoint());
 
 			var texture = new Bitmap(1, 1);
 			texture.SetPixel(0, 0, color);
 
-			EdgesSortFill(texture, resultBitmap, pathPoints, GraphicsPath.PathTypes, 255);
+			EdgesSortFill(texture, resultBitmap, 255);
 
 			return resultBitmap;
 		}

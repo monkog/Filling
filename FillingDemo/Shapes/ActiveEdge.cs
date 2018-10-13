@@ -29,7 +29,7 @@ namespace FillingDemo.Shapes
 		/// <summary>
 		/// Gets the value indicating whether the edge is horizontal.
 		/// </summary>
-		public bool IsHorizontal { get; }
+		public bool IsHorizontal => StartPoint.Y == EndPoint.Y;
 
 		/// <summary>
 		/// Gets the value indicating whether the current point is the end point of the edge.
@@ -51,7 +51,6 @@ namespace FillingDemo.Shapes
 
 			CurrentPoint = StartPoint;
 			Delta = CalculateDelta();
-			IsHorizontal = StartPoint.Y == EndPoint.Y;
 		}
 
 		private double CalculateDelta()
