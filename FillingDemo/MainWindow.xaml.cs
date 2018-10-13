@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using FillingDemo.Helpers;
 using FillingDemo.Shapes;
-using ButtonBase = System.Windows.Controls.Primitives.ButtonBase;
 using Point = System.Windows.Point;
 
 namespace FillingDemo

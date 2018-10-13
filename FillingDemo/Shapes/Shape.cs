@@ -73,6 +73,7 @@ namespace FillingDemo.Shapes
 				for (int i = 0; i < segment.Count(); i++)
 				{
 					var edge = new ActiveEdge(segment.ElementAt(i), segment.ElementAt((i + 1) % segment.Count()));
+					if (edge.StartPoint == edge.EndPoint) continue;
 					edges.Add(edge);
 				}
 			}
