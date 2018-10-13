@@ -46,9 +46,9 @@ namespace FillingDemo.Shapes
 		{
 			_bitmaps = new List<Bitmap>
 			{
-				Properties.Resources.m_stars,
-				Properties.Resources.m_darkClouds,
-				Properties.Resources.m_stone
+				Properties.Resources.Hexagons,
+				Properties.Resources.Material,
+				Properties.Resources.Panther
 			};
 		}
 

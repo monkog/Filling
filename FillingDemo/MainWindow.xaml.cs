@@ -61,7 +61,6 @@ namespace FillingDemo
 			_color = System.Drawing.Color.MidnightBlue;
 			MouseUp += MainWindow_MouseUp;
 			MouseMove += MainWindow_MouseMove;
-			KeyDown += MainWindow_KeyDown;
 			var background = new Background((int)DrawingCanvas.ActualWidth, (int)DrawingCanvas.ActualHeight);
 			DrawingCanvas.Background = background.Draw();
 		}
@@ -149,12 +148,6 @@ namespace FillingDemo
 				DrawingCanvas.Children.Remove(_textCanvas);
 
 			ConvertTextToGraphics();
-		}
-
-		private void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-		{
-			if (e.Key == System.Windows.Input.Key.Enter)
-				SetTextButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
 		}
 		#endregion
 

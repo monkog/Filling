@@ -105,14 +105,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <None Include="Resources\m_darkClouds.jpg" />
+    <None Include="Resources\Hexagons.JPG" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\m_stone.jpg" />
+    <None Include="Resources\Material.JPG" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\m_stars.jpg" />
+    <None Include="Resources\Panther.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
