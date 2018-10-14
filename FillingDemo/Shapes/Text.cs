@@ -1,10 +1,12 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Color = System.Drawing.Color;
+using FlowDirection = System.Windows.FlowDirection;
 using FontFamily = System.Drawing.FontFamily;
 using FontStyle = System.Drawing.FontStyle;
 using Point = System.Drawing.Point;
@@ -16,6 +18,7 @@ namespace FillingDemo.Shapes
 		public Text(string text, float fontSize)
 		{
 			GraphicsPath = ConvertTextToGraphics(text, fontSize);
+			ActiveEdges = CreateActiveEdgesList(GraphicsPath);
 		}
 
 		/// <summary>
@@ -55,6 +58,14 @@ namespace FillingDemo.Shapes
 			EdgesSortFill(texture, resultBitmap, 255);
 
 			return resultBitmap;
+		}
+
+		public void FindIntersections(IEnumerable<Polygon> polygons)
+		{
+			foreach (var polygon in polygons)
+			{
+				//var polygonPoint = polygon.
+			}
 		}
 
 		private static GraphicsPath ConvertTextToGraphics(string text, float fontSize)

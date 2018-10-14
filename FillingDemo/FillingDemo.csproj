@@ -56,8 +56,9 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\GraphicsPathExtensions.cs" />
     <Compile Include="Helpers\PointExtensions.cs" />
-    <Compile Include="PathPoint.cs" />
+    <Compile Include="Shapes\PathPoint.cs" />
     <Compile Include="Shapes\ActiveEdge.cs" />
+    <Compile Include="Shapes\PointType.cs" />
     <Compile Include="Shapes\Polygon.cs" />
     <Compile Include="Shapes\Background.cs" />
     <Compile Include="Shapes\Shape.cs" />

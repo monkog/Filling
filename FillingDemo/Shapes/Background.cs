@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Media;
@@ -8,6 +9,7 @@ using Point = System.Windows.Point;
 
 namespace FillingDemo.Shapes
 {
+	[ExcludeFromCodeCoverage]
 	public class Background
 	{
 		private readonly Random _random = new Random(DateTime.Now.Millisecond);
@@ -19,6 +21,11 @@ namespace FillingDemo.Shapes
 		private IEnumerable<Polygon> _polygons;
 
 		private List<Bitmap> _bitmaps;
+
+		/// <summary>
+		/// Gets the collection of drawn polygons.
+		/// </summary>
+		public IList<Polygon> Polygons { get; private set; }
 
 		public Background(int width, int height)
 		{
@@ -36,6 +43,7 @@ namespace FillingDemo.Shapes
 			for (int i = 0; i < polygonCount; i++)
 			{
 				var polygon = _polygons.ElementAt(i);
+				Polygons.Add(polygon);
 				polygon.EdgesSortFill(_bitmaps[_random.Next() % _bitmaps.Count], background, 180);
 			}
 
@@ -54,6 +62,7 @@ namespace FillingDemo.Shapes
 
 		private void InitializePolygons()
 		{
+			Polygons = new List<Polygon>();
 			_polygons = new List<Polygon>
 			{
 				new Polygon(new[] { new Point(100, 100), new Point(100, 300), new Point(200, 400), new Point(200, 150), new Point(150, 200) }),

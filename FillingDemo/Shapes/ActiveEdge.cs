@@ -17,6 +17,16 @@ namespace FillingDemo.Shapes
 		public Point EndPoint { get; set; }
 
 		/// <summary>
+		/// Gets or sets the active edge's in point.
+		/// </summary>
+		public Point InPoint { get; set; }
+
+		/// <summary>
+		/// Gets or sets the active edge's out point.
+		/// </summary>
+		public Point OutPoint { get; set; }
+
+		/// <summary>
 		/// Gets or sets the active edge's currently printed point.
 		/// </summary>
 		public Point CurrentPoint { get; set; }
@@ -38,6 +48,9 @@ namespace FillingDemo.Shapes
 
 		public ActiveEdge(Point startPoint, Point endPoint)
 		{
+			InPoint = startPoint;
+			OutPoint = endPoint;
+
 			if (startPoint.Y > endPoint.Y)
 			{
 				StartPoint = endPoint;

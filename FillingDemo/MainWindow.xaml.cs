@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,11 +19,15 @@ namespace FillingDemo
 
 		private string _text;
 
+		private Text _textGraphic;
+
 		private System.Drawing.Color _color;
 
 		private Point _lastMousePosition;
 
 		private bool _isMouseDown;
+
+		private IList<Polygon> _polygons;
 
 		public int TextSize
 		{
@@ -61,6 +66,7 @@ namespace FillingDemo
 			MouseUp += MainWindow_MouseUp;
 			MouseMove += MainWindow_MouseMove;
 			var background = new Background((int)DrawingCanvas.ActualWidth, (int)DrawingCanvas.ActualHeight);
+			_polygons = background.Polygons;
 			DrawingCanvas.Background = background.Draw();
 		}
 
@@ -95,6 +101,7 @@ namespace FillingDemo
 				Canvas.SetLeft(_textCanvas, DrawingCanvas.ActualWidth - _textCanvas.ActualWidth);
 
 			_lastMousePosition = e.GetPosition(DrawingCanvas);
+			_textGraphic.FindIntersections(_polygons);
 			//WeilerAtherton();
 		}
 
@@ -118,11 +125,11 @@ namespace FillingDemo
 
 		private void ConvertTextToGraphics()
 		{
-			var text = new Text(Text, TextSize);
+			_textGraphic = new Text(Text, TextSize);
 
 			try
 			{
-				var resultBitmap = text.Draw(_color);
+				var resultBitmap = _textGraphic.Draw(_color);
 				_textCanvas = new Canvas
 				{
 					Width = resultBitmap.Width,

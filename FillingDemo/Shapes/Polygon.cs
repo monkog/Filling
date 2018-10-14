@@ -9,6 +9,7 @@ namespace FillingDemo.Shapes
 		public Polygon(IEnumerable<Point> points)
 		{
 			GraphicsPath = points.CreateGraphicsPath();
+			ActiveEdges = CreateActiveEdgesList(GraphicsPath);
 		}
 	}
 }

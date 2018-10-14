@@ -15,6 +15,16 @@ namespace FillingDemo.Shapes
 		public GraphicsPath GraphicsPath { get; protected set; }
 
 		/// <summary>
+		/// Gets the collection of active edges.
+		/// </summary>
+		public IEnumerable<ActiveEdge> ActiveEdges { get; protected set; }
+
+		/// <summary>
+		/// Gets the collection of points defining the polygon and all intersection points.
+		/// </summary>
+		public IEnumerable<PathPoint> Points { get; set; }
+
+		/// <summary>
 		/// Fills this object with the given texture using active edge sort fill.
 		/// </summary>
 		/// <param name="texture">Texture to fill.</param>
@@ -23,7 +33,7 @@ namespace FillingDemo.Shapes
 		public void EdgesSortFill(Bitmap texture, Bitmap resultBitmap, int opacity)
 		{
 			var activeEdges = new List<ActiveEdge>();
-			var polygonEdges = CreateActiveEdgesList(GraphicsPath);
+			var polygonEdges = ActiveEdges.ToList();
 			polygonEdges.Sort((p, q) => (p.StartPoint.Y >= q.StartPoint.Y) ? 1 : -1);
 			var scanLine = (int)polygonEdges.First().StartPoint.Y;
 
@@ -63,7 +73,7 @@ namespace FillingDemo.Shapes
 			} while (polygonEdges.Any() || activeEdges.Any());
 		}
 
-		private static List<ActiveEdge> CreateActiveEdgesList(GraphicsPath path)
+		protected static List<ActiveEdge> CreateActiveEdgesList(GraphicsPath path)
 		{
 			var edges = new List<ActiveEdge>();
 			var segments = path.GetPathSegments();
