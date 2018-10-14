@@ -1,13 +1,13 @@
 ﻿using System.Windows;
 using FillingDemo.Shapes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace FillingTests.Shapes
 {
-	[TestClass]
+	[TestFixture]
 	public class ActiveEdgeTests
 	{
-		[TestMethod]
+		[Test]
 		public void Constructor_StartAndEndPoints_CurrentPointSetToStart()
 		{
 			var start = new Point(0, 0);
@@ -20,7 +20,7 @@ namespace FillingTests.Shapes
 			Assert.AreEqual(end, unitUnderTest.EndPoint);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Constructor_StartYGreaterThanEndY_StartAndEndSwitched()
 		{
 			var start = new Point(0, 10);
@@ -33,7 +33,7 @@ namespace FillingTests.Shapes
 			Assert.AreEqual(start, unitUnderTest.EndPoint);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Constructor_SameXCoordinates_DeltaZero()
 		{
 			var start = new Point(10, 10);
@@ -44,7 +44,7 @@ namespace FillingTests.Shapes
 			Assert.AreEqual(0, unitUnderTest.Delta);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Constructor_SameYCoordinates_DeltaZero()
 		{
 			var start = new Point(0, 10);
@@ -55,10 +55,10 @@ namespace FillingTests.Shapes
 			Assert.AreEqual(0, unitUnderTest.Delta);
 		}
 
-		[TestMethod]
-		[DataRow(10, 10, 0, 0, 1)]
-		[DataRow(0, 0, 1, 2, 0.5)]
-		[DataRow(0, 10, 10, 0, -1)]
+		[Test]
+		[TestCase(10, 10, 0, 0, 1)]
+		[TestCase(0, 0, 1, 2, 0.5)]
+		[TestCase(0, 10, 10, 0, -1)]
 		public void Constructor_BothCoordinatesDifferent_DeltaCalculated(double x1, double y1, double x2, double y2, double result)
 		{
 			var start = new Point(x1, y1);
