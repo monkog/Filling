@@ -105,6 +105,12 @@ namespace FillingDemo.Shapes
 
 			return p.X >= xMin && p.X <= xMax && p.Y >= yMin && p.Y <= yMax && matchesEquation;
 		}
+
+		/// <summary>
+		/// Finds the intersection point with a provided line.
+		/// </summary>
+		/// <param name="line">Line to find intersection with.</param>
+		/// <returns>Point of the intersection or null if such does not exist.</returns>
 		public Point? FindIntersection(ActiveEdge line)
 		{
 			double x;
@@ -144,7 +150,6 @@ namespace FillingDemo.Shapes
 
 			return null;
 		}
-
 
 		private double CalculateDelta()
 		{
