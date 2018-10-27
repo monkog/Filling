@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -28,6 +29,8 @@ namespace FillingDemo
 		private bool _isMouseDown;
 
 		private IList<Polygon> _polygons;
+
+		private IList<Canvas> _intersections;
 
 		public int TextSize
 		{
@@ -68,6 +71,7 @@ namespace FillingDemo
 			var background = new Background((int)DrawingCanvas.ActualWidth, (int)DrawingCanvas.ActualHeight);
 			_polygons = background.Polygons;
 			DrawingCanvas.Background = background.Draw();
+			_intersections = new Canvas[0];
 		}
 
 		private void TextCanvas_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -83,25 +87,52 @@ namespace FillingDemo
 			var mouseMovementX = e.GetPosition(DrawingCanvas).X - _lastMousePosition.X;
 			var mouseMovementY = e.GetPosition(DrawingCanvas).Y - _lastMousePosition.Y;
 			var offset = VisualTreeHelper.GetOffset(_textCanvas);
+			var oldX = _textGraphic.X;
+			var oldY = _textGraphic.Y;
 
 			if (offset.Y + mouseMovementY >= -0.2 * _textCanvas.ActualHeight)
 				if (offset.Y + mouseMovementY <= DrawingCanvas.ActualHeight - _textCanvas.ActualHeight)
+				{
 					Canvas.SetTop(_textCanvas, offset.Y + mouseMovementY);
+					_textGraphic.Y = offset.Y + mouseMovementY;
+				}
 				else
+				{
 					Canvas.SetTop(_textCanvas, DrawingCanvas.ActualHeight - _textCanvas.ActualHeight);
+					_textGraphic.Y = DrawingCanvas.ActualHeight - _textCanvas.ActualHeight;
+				}
 			else
+			{
 				Canvas.SetTop(_textCanvas, -0.2 * _textCanvas.ActualHeight);
+				_textGraphic.Y = -0.2 * _textCanvas.ActualHeight;
+			}
 
 			if (offset.X + mouseMovementX < DrawingCanvas.ActualWidth - _textCanvas.ActualWidth)
 				if (offset.X + mouseMovementX >= 0)
+				{
 					Canvas.SetLeft(_textCanvas, offset.X + mouseMovementX);
+					_textGraphic.X = offset.X + mouseMovementX;
+				}
 				else
+				{
 					Canvas.SetLeft(_textCanvas, 0);
+					_textGraphic.X = 0;
+				}
 			else
+			{
 				Canvas.SetLeft(_textCanvas, DrawingCanvas.ActualWidth - _textCanvas.ActualWidth);
+				_textGraphic.X = DrawingCanvas.ActualWidth - _textCanvas.ActualWidth;
+			}
+
+			foreach (var edge in _textGraphic.ActiveEdges)
+			{
+				edge.Move(_textGraphic.X - oldX, _textGraphic.Y - oldY);
+			}
 
 			_lastMousePosition = e.GetPosition(DrawingCanvas);
-			_textGraphic.FindIntersections(_polygons);
+			foreach (var intersection in _intersections) DrawingCanvas.Children.Remove(intersection);
+			_intersections = _textGraphic.FindIntersections(_polygons).ToList();
+			foreach (var intersection in _intersections) DrawingCanvas.Children.Add(intersection);
 			//WeilerAtherton();
 		}
 
@@ -146,6 +177,10 @@ namespace FillingDemo
 
 			DrawingCanvas.Children.Add(_textCanvas);
 			_textCanvas.MouseDown += TextCanvas_MouseDown;
+
+			foreach (var intersection in _intersections) DrawingCanvas.Children.Remove(intersection);
+			_intersections = _textGraphic.FindIntersections(_polygons).ToList();
+			foreach (var intersection in _intersections) DrawingCanvas.Children.Add(intersection);
 		}
 
 		private void SetTextButton_Click(object sender, RoutedEventArgs e)

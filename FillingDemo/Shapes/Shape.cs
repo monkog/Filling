@@ -25,6 +25,22 @@ namespace FillingDemo.Shapes
 		public IEnumerable<PathPoint> Points { get; set; }
 
 		/// <summary>
+		/// Gets or sets the x coordinate of the shape.
+		/// </summary>
+		public double X { get; set; }
+
+		/// <summary>
+		/// Gets or sets the y coordinate of the shape.
+		/// </summary>
+		public double Y { get; set; }
+
+		protected Shape()
+		{
+			X = 0;
+			Y = 0;
+		}
+
+		/// <summary>
 		/// Fills this object with the given texture using active edge sort fill.
 		/// </summary>
 		/// <param name="texture">Texture to fill.</param>

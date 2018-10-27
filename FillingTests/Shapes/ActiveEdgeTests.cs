@@ -202,6 +202,30 @@ namespace FillingTests.Shapes
 		}
 
 		[Test]
+		public void FindIntersection_IntersectingWithVerticalLine_PointOfIntersection()
+		{
+			var line1 = new ActiveEdge(new Point(0, 0), new Point(10, 10));
+			var line2 = new ActiveEdge(new Point(5, 0), new Point(5, 10));
+
+			var result = line1.FindIntersection(line2);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(5, result.Value.X);
+			Assert.AreEqual(5, result.Value.Y);
+		}
+
+		[Test]
+		public void FindIntersection_MatchingEpsilonDifference_PointOfIntersection()
+		{
+			var line1 = new ActiveEdge(new Point(500, 180), new Point(700, 270));
+			var line2 = new ActiveEdge(new Point(541, 218), new Point(645, 218));
+
+			var result = line1.FindIntersection(line2);
+
+			Assert.IsNotNull(result);
+		}
+
+		[Test]
 		public void FindIntersection_ParallelHorizontal_Null()
 		{
 			var line1 = new ActiveEdge(new Point(0, 0), new Point(10, 0));

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Color = System.Drawing.Color;
@@ -60,12 +62,33 @@ namespace FillingDemo.Shapes
 			return resultBitmap;
 		}
 
-		public void FindIntersections(IEnumerable<Polygon> polygons)
+		public IEnumerable<Canvas> FindIntersections(IEnumerable<Polygon> polygons)
 		{
+			var intersections = new List<Canvas>();
 			foreach (var polygon in polygons)
 			{
-				//var polygonPoint = polygon.
+				foreach (var edge in polygon.ActiveEdges)
+				{
+					foreach (var textEdge in ActiveEdges)
+					{
+						var intersection = edge.FindIntersection(textEdge);
+						if (intersection == null) continue;
+
+						var canvas = new Canvas
+						{
+							Width = 10,
+							Height = 10,
+							Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 255, 0))
+						};
+						Canvas.SetTop(canvas, intersection.Value.Y);
+						Canvas.SetLeft(canvas, intersection.Value.X);
+
+						intersections.Add(canvas);
+					}
+				}
 			}
+
+			return intersections;
 		}
 
 		private static GraphicsPath ConvertTextToGraphics(string text, float fontSize)

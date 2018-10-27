@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using FillingDemo.Helpers;
 
 namespace FillingDemo.Shapes
 {
 	[DebuggerDisplay("Start = {StartPoint.X}, {StartPoint.Y} End = {EndPoint.X}, {EndPoint.Y}, Delta = {Delta}")]
 	public class ActiveEdge
 	{
+		private const double Epsilon = 0.00000000001;
+
 		/// <summary>
 		/// Gets or sets the active edge's start point.
 		/// </summary>
@@ -36,34 +39,34 @@ namespace FillingDemo.Shapes
 		/// Gets or sets the a value.
 		/// </summary>
 		/// <remarks>Considering that the line's equation is y = ax + b.</remarks>
-		public double A { get; set; }
+		public double A { get; }
 
 		/// <summary>
 		/// Gets or sets the b value.
 		/// </summary>
 		/// <remarks>Considering that the line's equation is y = ax + b.</remarks>
-		public double B { get; set; }
+		public double B { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the 1/a value.
 		/// </summary>
 		/// <remarks>Considering that the line's equation is y = ax + b.</remarks>
-		public double Delta { get; set; }
+		public double Delta { get; }
 
 		/// <summary>
 		/// Gets the value indicating whether the edge is horizontal.
 		/// </summary>
-		public bool IsHorizontal => StartPoint.Y == EndPoint.Y;
+		public bool IsHorizontal => (StartPoint.Y - EndPoint.Y).IsZero();
 
 		/// <summary>
 		/// Gets the value indicating whether the edge is vertical.
 		/// </summary>
-		public bool IsVertical => StartPoint.X == EndPoint.X;
+		public bool IsVertical => (StartPoint.X - EndPoint.X).IsZero();
 
 		/// <summary>
 		/// Gets the value indicating whether the current point is the end point of the edge.
 		/// </summary>
-		public bool IsEdgeEnd => CurrentPoint.Y == EndPoint.Y;
+		public bool IsEdgeEnd => (CurrentPoint.Y - EndPoint.Y).IsZero();
 
 		public ActiveEdge(Point startPoint, Point endPoint)
 		{
@@ -84,7 +87,7 @@ namespace FillingDemo.Shapes
 			CurrentPoint = StartPoint;
 
 			Delta = CalculateDelta();
-			A = Delta == 0.0 ? 0 : 1 / Delta;
+			A = Delta.IsZero() ? 0 : 1 / Delta;
 			B = StartPoint.Y - (A * StartPoint.X);
 		}
 
@@ -95,13 +98,13 @@ namespace FillingDemo.Shapes
 		/// <returns>True if the edge contains the given point, false otherwise.</returns>
 		public bool Contains(Point p)
 		{
-			var xMin = Math.Min(StartPoint.X, EndPoint.X);
-			var xMax = Math.Max(StartPoint.X, EndPoint.X);
-			var yMin = StartPoint.Y;
-			var yMax = EndPoint.Y;
-			
+			var xMin = Math.Min(StartPoint.X, EndPoint.X) - Epsilon;
+			var xMax = Math.Max(StartPoint.X, EndPoint.X) + Epsilon;
+			var yMin = StartPoint.Y - Epsilon;
+			var yMax = EndPoint.Y + Epsilon;
+
 			// For vertical the equation is met when provided point is within max and min boundaries.
-			var matchesEquation = IsVertical || p.Y == (A * p.X) + B;
+			var matchesEquation = IsVertical || (p.Y - (A * p.X) - B).IsZero();
 
 			return p.X >= xMin && p.X <= xMax && p.Y >= yMin && p.Y <= yMax && matchesEquation;
 		}
@@ -117,7 +120,7 @@ namespace FillingDemo.Shapes
 			double y;
 
 			// Lines are parallel or perpendicular and horizontal or vertical.
-			if (A == line.A && A == 0.0)
+			if (line.A.IsZero() && A.IsZero())
 			{
 				if ((IsHorizontal && line.IsHorizontal) || (IsVertical && line.IsVertical))
 					return null;
@@ -141,6 +144,28 @@ namespace FillingDemo.Shapes
 				return null;
 			}
 
+			if (line.IsVertical)
+			{
+				x = line.StartPoint.X;
+				y = A * x + B;
+				var p = new Point(x, y);
+				if (Contains(p) && line.Contains(p))
+					return p;
+
+				return null;
+			}
+
+			if (IsVertical)
+			{
+				x = StartPoint.X;
+				y = line.A * x + line.B;
+				var p = new Point(x, y);
+				if (Contains(p) && line.Contains(p))
+					return p;
+
+				return null;
+			}
+
 			x = (line.B - B) / (A - line.A);
 			y = A * x + B;
 			var point = new Point(x, y);
@@ -151,13 +176,26 @@ namespace FillingDemo.Shapes
 			return null;
 		}
 
+		/// <summary>
+		/// Moves the edge by the given deltas.
+		/// </summary>
+		/// <param name="deltaX">X position change.</param>
+		/// <param name="deltaY">Y position change.</param>
+		public void Move(double deltaX, double deltaY)
+		{
+			StartPoint = new Point(StartPoint.X + deltaX, StartPoint.Y + deltaY);
+			EndPoint = new Point(EndPoint.X + deltaX, EndPoint.Y + deltaY);
+
+			B = StartPoint.Y - (A * StartPoint.X);
+		}
+
 		private double CalculateDelta()
 		{
 			double deltaX = EndPoint.X - StartPoint.X;
 			double deltaY = EndPoint.Y - StartPoint.Y;
 
 			// Calculate the difference between next x-coordinates.
-			if (deltaY != 0.0)
+			if (!deltaY.IsZero())
 				return deltaX / deltaY;
 
 			return 0;
