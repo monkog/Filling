@@ -50,6 +50,7 @@
     <Compile Include="Helpers\DoubleExtensionsTests.cs" />
     <Compile Include="Shapes\ActiveEdgeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shapes\TextTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FillingDemo\FillingDemo.csproj">

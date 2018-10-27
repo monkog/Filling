@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Threading;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using Color = System.Drawing.Color;
-using FlowDirection = System.Windows.FlowDirection;
 using FontFamily = System.Drawing.FontFamily;
 using FontStyle = System.Drawing.FontStyle;
 using Point = System.Drawing.Point;
@@ -17,36 +13,18 @@ namespace FillingDemo.Shapes
 {
 	public class Text : Shape
 	{
+		private double _width;
+
+		private double _height;
+
 		public Text(string text, float fontSize)
 		{
 			GraphicsPath = ConvertTextToGraphics(text, fontSize);
 			ActiveEdges = CreateActiveEdgesList(GraphicsPath);
-		}
 
-		/// <summary>
-		/// Create path from text.
-		/// </summary>
-		public static PathGeometry ToSmootherGraphics(
-			string text,
-			double fontSize,
-			System.Windows.Media.FontFamily fontFamily,
-			System.Windows.FontStyle fontStyle,
-			FontWeight fontWeight,
-			FontStretch fontStretch,
-			System.Windows.Media.Brush fill)
-		{
-			FormattedText formattedText = new FormattedText(text, Thread.CurrentThread.CurrentUICulture,
-				FlowDirection.LeftToRight,
-				new Typeface(fontFamily, fontStyle, fontWeight, fontStretch),
-				fontSize, fill);
-
-			var textGeometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
-
-			var path = new Path { Fill = fill, Data = textGeometry };
-			//Canvas.SetZIndex(canvas, int.MaxValue);
-			//Canvas.Children.Add(path);
-
-			return textGeometry.GetOutlinedPathGeometry();
+			var bounds = GraphicsPath.GetBounds();
+			_width = bounds.Width;
+			_height = bounds.Height;
 		}
 
 		public Bitmap Draw(Color color)
@@ -89,6 +67,27 @@ namespace FillingDemo.Shapes
 			}
 
 			return intersections;
+		}
+
+		/// <summary>
+		/// Moves the text by the provided coordinates.
+		/// </summary>
+		/// <param name="deltaX">Value to move the X coordinate by.</param>
+		/// <param name="deltaY">Value to move the y coordinate by.</param>
+		/// <param name="maxX">Width boundary.</param>
+		/// <param name="maxY">Height boundary.</param>
+		public void Move(double deltaX, double deltaY, double maxX, double maxY)
+		{
+			var oldX = X;
+			var oldY = Y;
+
+			Y = Math.Min(Math.Max(0, Y + deltaY), maxY - (_height * 1.3));
+			X = Math.Min(Math.Max(0, X + deltaX), maxX - (_width * 1.05));
+
+			foreach (var edge in ActiveEdges)
+			{
+				edge.Move(X - oldX, Y - oldY);
+			}
 		}
 
 		private static GraphicsPath ConvertTextToGraphics(string text, float fontSize)

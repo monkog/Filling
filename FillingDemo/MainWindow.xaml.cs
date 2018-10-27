@@ -86,48 +86,11 @@ namespace FillingDemo
 
 			var mouseMovementX = e.GetPosition(DrawingCanvas).X - _lastMousePosition.X;
 			var mouseMovementY = e.GetPosition(DrawingCanvas).Y - _lastMousePosition.Y;
-			var offset = VisualTreeHelper.GetOffset(_textCanvas);
-			var oldX = _textGraphic.X;
-			var oldY = _textGraphic.Y;
 
-			if (offset.Y + mouseMovementY >= -0.2 * _textCanvas.ActualHeight)
-				if (offset.Y + mouseMovementY <= DrawingCanvas.ActualHeight - _textCanvas.ActualHeight)
-				{
-					Canvas.SetTop(_textCanvas, offset.Y + mouseMovementY);
-					_textGraphic.Y = offset.Y + mouseMovementY;
-				}
-				else
-				{
-					Canvas.SetTop(_textCanvas, DrawingCanvas.ActualHeight - _textCanvas.ActualHeight);
-					_textGraphic.Y = DrawingCanvas.ActualHeight - _textCanvas.ActualHeight;
-				}
-			else
-			{
-				Canvas.SetTop(_textCanvas, -0.2 * _textCanvas.ActualHeight);
-				_textGraphic.Y = -0.2 * _textCanvas.ActualHeight;
-			}
+			_textGraphic.Move(mouseMovementX, mouseMovementY, DrawingCanvas.ActualWidth, DrawingCanvas.ActualHeight);
 
-			if (offset.X + mouseMovementX < DrawingCanvas.ActualWidth - _textCanvas.ActualWidth)
-				if (offset.X + mouseMovementX >= 0)
-				{
-					Canvas.SetLeft(_textCanvas, offset.X + mouseMovementX);
-					_textGraphic.X = offset.X + mouseMovementX;
-				}
-				else
-				{
-					Canvas.SetLeft(_textCanvas, 0);
-					_textGraphic.X = 0;
-				}
-			else
-			{
-				Canvas.SetLeft(_textCanvas, DrawingCanvas.ActualWidth - _textCanvas.ActualWidth);
-				_textGraphic.X = DrawingCanvas.ActualWidth - _textCanvas.ActualWidth;
-			}
-
-			foreach (var edge in _textGraphic.ActiveEdges)
-			{
-				edge.Move(_textGraphic.X - oldX, _textGraphic.Y - oldY);
-			}
+			Canvas.SetTop(_textCanvas, _textGraphic.Y);
+			Canvas.SetLeft(_textCanvas, _textGraphic.X);
 
 			_lastMousePosition = e.GetPosition(DrawingCanvas);
 			foreach (var intersection in _intersections) DrawingCanvas.Children.Remove(intersection);
