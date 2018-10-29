@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -8,7 +7,6 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using FillingDemo.Helpers;
 using FillingDemo.Shapes;
-using Point = System.Windows.Point;
 
 namespace FillingDemo
 {
@@ -121,22 +119,20 @@ namespace FillingDemo
 		{
 			_textGraphic = new Text(Text, TextSize);
 
-			try
-			{
-				var resultBitmap = _textGraphic.Draw(_color);
-				_textCanvas = new Canvas
-				{
-					Width = resultBitmap.Width,
-					Height = resultBitmap.Height,
-					Background = resultBitmap.CreateImageBrush()
-				};
-			}
-			catch (Exception)
+			var resultBitmap = _textGraphic.Draw(_color);
+			if (resultBitmap.Width > DrawingCanvas.ActualWidth || resultBitmap.Height > DrawingCanvas.ActualHeight)
 			{
 				System.Windows.MessageBox.Show("The text you provided is too long or the font is to big.");
 				_textCanvas = new Canvas();
 				return;
 			}
+
+			_textCanvas = new Canvas
+			{
+				Width = resultBitmap.Width,
+				Height = resultBitmap.Height,
+				Background = resultBitmap.CreateImageBrush()
+			};
 
 			DrawingCanvas.Children.Add(_textCanvas);
 			_textCanvas.MouseDown += TextCanvas_MouseDown;

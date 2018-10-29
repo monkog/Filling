@@ -13,9 +13,9 @@ namespace FillingDemo.Shapes
 {
 	public class Text : Shape
 	{
-		private double _width;
+		private readonly double _width;
 
-		private double _height;
+		private readonly double _height;
 
 		public Text(string text, float fontSize)
 		{
@@ -23,8 +23,8 @@ namespace FillingDemo.Shapes
 			ActiveEdges = CreateActiveEdgesList(GraphicsPath);
 
 			var bounds = GraphicsPath.GetBounds();
-			_width = bounds.Width;
-			_height = bounds.Height;
+			_width = bounds.Right;
+			_height = bounds.Bottom;
 		}
 
 		public Bitmap Draw(Color color)
@@ -81,8 +81,8 @@ namespace FillingDemo.Shapes
 			var oldX = X;
 			var oldY = Y;
 
-			Y = Math.Min(Math.Max(0, Y + deltaY), maxY - (_height * 1.3));
-			X = Math.Min(Math.Max(0, X + deltaX), maxX - (_width * 1.05));
+			Y = Math.Min(Math.Max(0, Y + deltaY), maxY - _height);
+			X = Math.Min(Math.Max(0, X + deltaX), maxX - _width);
 
 			foreach (var edge in ActiveEdges)
 			{
